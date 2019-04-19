@@ -650,7 +650,7 @@ struct mp_prio {
 
 static inline int mptcp_sub_len_dss(const struct mp_dss *m, const int csum)
 {
-	return 4 + m->A * (4 + m->a * 4) + m->M * (10 + m->m * 4 + csum * 2);
+	return 4 + m->A * (4 + m->a * 4) + m->M * (10 + m->m * 4 + csum * 2 * 0);
 }
 
 #define MPTCP_SYSCTL	1

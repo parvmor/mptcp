@@ -344,7 +344,7 @@ static int mptcp_write_dss_mapping(const struct tcp_sock *tp, const struct sk_bu
 	else
 		data_len = tcb->end_seq - tcb->seq;
 
-	if (tp->mpcb->dss_csum && data_len) {
+	if ((false && tp->mpcb->dss_csum) && data_len) {
 		__be16 *p16 = (__be16 *)ptr;
 		__be32 hdseq = mptcp_get_highorder_sndbits(skb, tp->mpcb);
 		__wsum csum;
