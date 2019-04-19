@@ -352,9 +352,11 @@ static int mptcp_write_dss_mapping(const struct tcp_sock *tp, const struct sk_bu
 		*ptr = htonl(((data_len) << 16) |
 			     (TCPOPT_EOL << 8) |
 			     (TCPOPT_EOL));
-		csum = csum_partial(ptr - 2, 12, skb->csum);
+		/* csum = csum_partial(ptr - 2, 12, skb->csum); */
 		p16++;
-		*p16++ = csum_fold(csum_partial(&hdseq, sizeof(hdseq), csum));
+		/* This is the place of dss checksum assignment */
+		/* *p16++ = csum_fold(csum_partial(&hdseq, sizeof(hdseq), csum)); */
+		p16++;
 	} else {
 		*ptr++ = htonl(((data_len) << 16) |
 			       (TCPOPT_NOP << 8) |
@@ -379,6 +381,7 @@ static int mptcp_write_dss_data_ack(const struct tcp_sock *tp, const struct sk_b
 	mdss->M = mptcp_is_data_seq(skb) ? 1 : 0;
 	mdss->a = 0;
 	mdss->A = 1;
+	/* Change this to reduce the packet size by 2 bytes */
 	mdss->len = mptcp_sub_len_dss(mdss, tp->mpcb->dss_csum);
 	ptr++;
 
@@ -461,7 +464,7 @@ static bool mptcp_skb_entail(struct sock *sk, struct sk_buff *skb, int reinject)
 	 *    (e.g., in the case of TFO retransmissions).
 	 */
 	if (skb->ip_summed == CHECKSUM_PARTIAL &&
-	    (!sk_check_csum_caps(sk) || tp->mpcb->dss_csum)) {
+	    (!sk_check_csum_caps(sk) || (false && tp->mpcb->dss_csum))) {
 		subskb->csum = skb->csum = skb_checksum(skb, 0, skb->len, 0);
 		subskb->ip_summed = skb->ip_summed = CHECKSUM_NONE;
 	}

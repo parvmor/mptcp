@@ -1367,7 +1367,7 @@ new_segment:
 			 * In case of mptcp, hw-csum's will be handled
 			 * later in mptcp_write_xmit.
 			 */
-			if (((mptcp(tp) && !tp->mpcb->dss_csum) || !mptcp(tp)) &&
+			if (((mptcp(tp) && (true || !tp->mpcb->dss_csum)) || !mptcp(tp)) &&
 			    (mptcp(tp) || sk_check_csum_caps(sk)))
 				skb->ip_summed = CHECKSUM_PARTIAL;
 

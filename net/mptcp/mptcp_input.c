@@ -941,7 +941,7 @@ static int mptcp_queue_skb(struct sock *sk)
 	}
 
 	/* Verify the checksum */
-	if (mpcb->dss_csum && !mpcb->infinite_mapping_rcv) {
+	if ((false && mpcb->dss_csum) && !mpcb->infinite_mapping_rcv) {
 		int ret = mptcp_verif_dss_csum(sk);
 
 		if (ret <= 0) {
@@ -2133,7 +2133,7 @@ bool mptcp_handle_options(struct sock *sk, const struct tcphdr *th,
 	 * If a checksum is not present when its use has been negotiated, the
 	 * receiver MUST close the subflow with a RST as it is considered broken.
 	 */
-	if (mptcp_is_data_seq(skb) && tp->mpcb->dss_csum &&
+	if (mptcp_is_data_seq(skb) && (false && tp->mpcb->dss_csum) &&
 	    !(TCP_SKB_CB(skb)->mptcp_flags & MPTCPHDR_DSS_CSUM)) {
 		mptcp_send_reset(sk);
 		return true;
@@ -2323,7 +2323,7 @@ int mptcp_rcv_synsent_state_process(struct sock *sk, struct sock **skptr,
 		 */
 		tp->mptcp->snt_isn = tp->snd_una - 1;
 		tp->mpcb->dss_csum = mopt->dss_csum;
-		if (tp->mpcb->dss_csum)
+		if ((false && tp->mpcb->dss_csum))
 			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_CSUMENABLED);
 
 		tp->mptcp->include_mpc = 1;
